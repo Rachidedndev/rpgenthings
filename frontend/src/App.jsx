@@ -1,33 +1,35 @@
+import { useState } from 'react';
+
 export default function App() {
   
-  // O 'async' avisa que essa função lida com requisições que demoram
-  const fazerConexaoComBackend = async () => {
-    console.log("Botão clicado! O mensageiro saiu correndo...");
+  const [taverna, setTaverna] = useState("A Forja está fria..."); 
+
+  const gerarNovaTaverna = async () => {
+    setTaverna("Forjando nome...");
     
     try {
-      // O 'await fetch' manda o mensageiro ir na porta 8000 e ESPERA ele voltar
-      const resposta = await fetch("http://localhost:8000/");
-      
-      // Quando ele volta, a resposta vem em formato de rede bruto.
-      // O 'await resposta.json()' transforma isso num objeto JavaScript legível.
+      const resposta = await fetch("https://rpgenthings-backend.onrender.com/taverna");
       const dados = await resposta.json();
       
-      // Imprime a mensagem que veio lá do Python!
-      console.log("A resposta do Python chegou:", dados);
+      setTaverna(dados.nome_taverna); 
       
     } catch (erro) {
-      console.error("Deu ruim na viagem do mensageiro:", erro);
+      console.error("Erro:", erro);
+      setTaverna("Erro ao forjar. O ferreiro tropeçou.");
     }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px", color: "white" }}>
-      <h1>🎲 A Forja de RPG</h1>
+      <h1>🎲 Gerador de Tavernas</h1>
+      
+      <h2 style={{ color: "#a855f7", margin: "30px 0" }}>{taverna}</h2> 
+      
       <button 
-        onClick={fazerConexaoComBackend}
-        style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer", marginTop: "20px" }}
+        onClick={gerarNovaTaverna}
+        style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}
       >
-        Acordar o Backend
+        Gerar Nova Taverna
       </button>
     </div>
   );
